@@ -1,0 +1,68 @@
+{
+  "name": "ghostpilot-vscode",
+  "displayName": "GhostPilot — Zero-Touch Developer Intent Predictor",
+  "description": "Observes coding context and developer interaction signals to speculatively prepare solutions before you ask.",
+  "version": "1.0.0",
+  "publisher": "ghostpilot",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "AI",
+    "Linters"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "ghostpilot.analyzeCurrentContext",
+        "title": "GhostPilot: Analyze Current Context"
+      },
+      {
+        "command": "ghostpilot.showPrediction",
+        "title": "GhostPilot: Show Prediction"
+      },
+      {
+        "command": "ghostpilot.generateFix",
+        "title": "GhostPilot: Generate Fix"
+      },
+      {
+        "command": "ghostpilot.applySuggestedFix",
+        "title": "GhostPilot: Apply Suggested Fix"
+      },
+      {
+        "command": "ghostpilot.dismissSuggestion",
+        "title": "GhostPilot: Dismiss Suggestion"
+      }
+    ],
+    "configuration": {
+      "title": "GhostPilot",
+      "properties": {
+        "ghostpilot.serverUrl": {
+          "type": "string",
+          "default": "http://localhost:3000",
+          "description": "URL of the local GhostPilot server engine."
+        },
+        "ghostpilot.speculativeMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically prepare fixes when prediction confidence exceeds threshold."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.3"
+  }
+}

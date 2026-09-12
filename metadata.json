@@ -1,0 +1,6 @@
+{
+  "name": "GhostPilot",
+  "description": "VS Code coding workspace with integrated GhostPilot speculative intent predictor, File Explorer, real editable Code Editor, persistent Fixing Error panel, and bottom agent status bar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

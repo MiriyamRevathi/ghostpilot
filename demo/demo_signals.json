@@ -1,0 +1,89 @@
+{
+  "scenario": "Debugging UserService undefined access",
+  "steps": [
+    {
+      "stepIndex": 1,
+      "title": "Terminal Test Failure",
+      "description": "Developer runs test suite in terminal; Vitest reports a failing test with TypeError in UserService.ts line 16.",
+      "activeFile": "src/services/UserService.ts",
+      "line": 16,
+      "signals": {
+        "terminal_activity": 1,
+        "error_count": 2,
+        "pause_duration": 1.2,
+        "typing_speed": 18,
+        "backspace_count": 0,
+        "cursor_movement": 2.4,
+        "mouse_activity": 4.1,
+        "diagnostic_count": 2,
+        "code_complexity": 3,
+        "time_on_problem": 14
+      },
+      "intent": "RUN_TEST",
+      "confidence": 0.74
+    },
+    {
+      "stepIndex": 2,
+      "title": "Viewing Error Diagnostic & Long Pause",
+      "description": "Developer jumps to line 16, pauses for 4.2 seconds staring at the TypeError diagnostic hover tooltip.",
+      "activeFile": "src/services/UserService.ts",
+      "line": 16,
+      "signals": {
+        "terminal_activity": 1,
+        "error_count": 2,
+        "pause_duration": 4.2,
+        "typing_speed": 4,
+        "backspace_count": 3,
+        "cursor_movement": 0.5,
+        "mouse_activity": 1.2,
+        "diagnostic_count": 2,
+        "code_complexity": 3,
+        "time_on_problem": 38
+      },
+      "intent": "DEBUG_ERROR",
+      "confidence": 0.92
+    },
+    {
+      "stepIndex": 3,
+      "title": "Speculative Engine Triggered (>0.80)",
+      "description": "GhostPilot detects DEBUG_ERROR (92%). Speculative engine initiates root-cause analysis, AST inspection, candidate fix and unit test synthesis into in-memory cache.",
+      "activeFile": "src/services/UserService.ts",
+      "line": 16,
+      "signals": {
+        "terminal_activity": 1,
+        "error_count": 2,
+        "pause_duration": 6.8,
+        "typing_speed": 0,
+        "backspace_count": 4,
+        "cursor_movement": 1.1,
+        "mouse_activity": 2.0,
+        "diagnostic_count": 2,
+        "code_complexity": 3,
+        "time_on_problem": 55
+      },
+      "intent": "DEBUG_ERROR",
+      "confidence": 0.94
+    },
+    {
+      "stepIndex": 4,
+      "title": "Zero-Touch Suggestion Ready",
+      "description": "Suggestion panel displays root-cause analysis, safe null-navigation fix, diff view, and regression unit test without the developer asking.",
+      "activeFile": "src/services/UserService.ts",
+      "line": 16,
+      "signals": {
+        "terminal_activity": 0,
+        "error_count": 2,
+        "pause_duration": 2.1,
+        "typing_speed": 12,
+        "backspace_count": 1,
+        "cursor_movement": 3.2,
+        "mouse_activity": 5.4,
+        "diagnostic_count": 2,
+        "code_complexity": 3,
+        "time_on_problem": 72
+      },
+      "intent": "DEBUG_ERROR",
+      "confidence": 0.93
+    }
+  ]
+}

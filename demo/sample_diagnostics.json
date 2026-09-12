@@ -1,0 +1,26 @@
+[
+  {
+    "id": "diag_001",
+    "type": "TypeError",
+    "message": "Cannot read properties of undefined (reading 'name')",
+    "file": "src/services/UserService.ts",
+    "line": 16,
+    "column": 45,
+    "severity": "error",
+    "stackTrace": "TypeError: Cannot read properties of undefined (reading 'name')\n    at UserService.getUserDisplayName (/app/src/services/UserService.ts:16:45)\n    at Object.<anonymous> (/app/tests/user.test.ts:24:20)\n    at processImmediate (node:internal/timers:478:21)",
+    "timestamp": "2026-09-03T10:20:15.120Z",
+    "relatedCodeSnippet": "return this.users.find(u => u.id === id).name;"
+  },
+  {
+    "id": "diag_002",
+    "type": "TestFailure",
+    "message": "FAIL tests/user.test.ts > should return undefined or default when user is absent",
+    "file": "tests/user.test.ts",
+    "line": 24,
+    "column": 12,
+    "severity": "error",
+    "stackTrace": "AssertionError: expected getUserDisplayName('unknown') to handle missing user, but threw TypeError",
+    "timestamp": "2026-09-03T10:20:16.002Z",
+    "relatedCodeSnippet": "expect(() => service.getUserDisplayName('non_existent')).not.toThrow();"
+  }
+]

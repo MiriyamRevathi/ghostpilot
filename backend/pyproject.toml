@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "ghostpilot-backend"
+version = "1.0.0"
+description = "GhostPilot local developer intent predictor and speculative assistance engine"
+authors = ["GhostPilot Authors <dev@ghostpilot.local>"]
+readme = "README.md"
+packages = [{include = "app"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = ">=0.110.0,<1.0.0"
+uvicorn = ">=0.28.0,<1.0.0"
+pydantic = ">=2.6.0,<3.0.0"
+scikit-learn = ">=1.4.0,<2.0.0"
+numpy = ">=1.26.0,<2.0.0"
+httpx = ">=0.27.0,<1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0.0,<9.0.0"
+pytest-asyncio = ">=0.23.0,<1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

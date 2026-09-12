@@ -1,0 +1,33 @@
+{
+  "model_name": "GhostPilot-IntentClassifier-v1",
+  "algorithm": "Multinomial Logistic Regression + Decision Ensemble",
+  "version": "1.0.0",
+  "trained_on": "2026-09-01",
+  "features": [
+    "pause_duration",
+    "typing_speed",
+    "backspace_count",
+    "cursor_movement",
+    "mouse_activity",
+    "error_count",
+    "terminal_activity",
+    "diagnostic_count",
+    "code_complexity",
+    "time_on_problem"
+  ],
+  "intents": [
+    "DEBUG_ERROR",
+    "WRITE_UNIT_TEST",
+    "EXPLAIN_ERROR",
+    "REFACTOR_CODE",
+    "WRITE_DOCUMENTATION",
+    "NAVIGATE_CODE",
+    "SEARCH_CODEBASE",
+    "RUN_TEST",
+    "FIX_SYNTAX",
+    "REVIEW_CODE"
+  ],
+  "accuracy": 0.942,
+  "f1_macro": 0.938,
+  "target_latency_ms": 5
+}
