@@ -1,0 +1,1887 @@
+/**
+ * GhostPilot AI Developer Platform - Core Domain Service
+ * Subsystem Domain: ast_intelligence
+ * Component: Control-Flow Graph and Data-Flow Analyzer (control-flow-graph-builder)
+ * Speculative AST manipulation, multi-threaded task evaluation, and intent caching.
+ */
+
+import {
+  ControlFlowGraphBuilderStatus,
+  ControlFlowGraphBuilderPriority,
+  ControlFlowGraphBuilderExecutionTier,
+  ControlFlowGraphBuilderFailureCode,
+  ControlFlowGraphBuilderMetadata,
+  ControlFlowGraphBuilderConfiguration,
+  ControlFlowGraphBuilderDiagnosticStamp,
+  ControlFlowGraphBuilderMetricSummary,
+  ControlFlowGraphBuilderEntityRecord_1,
+  ControlFlowGraphBuilderBatchOperationResult_1,
+  ControlFlowGraphBuilderEntityRecord_2,
+  ControlFlowGraphBuilderBatchOperationResult_2,
+  ControlFlowGraphBuilderEntityRecord_3,
+  ControlFlowGraphBuilderBatchOperationResult_3,
+  ControlFlowGraphBuilderEntityRecord_4,
+  ControlFlowGraphBuilderBatchOperationResult_4,
+  ControlFlowGraphBuilderEntityRecord_5,
+  ControlFlowGraphBuilderBatchOperationResult_5,
+  ControlFlowGraphBuilderEntityRecord_6,
+  ControlFlowGraphBuilderBatchOperationResult_6,
+  ControlFlowGraphBuilderEntityRecord_7,
+  ControlFlowGraphBuilderBatchOperationResult_7,
+  ControlFlowGraphBuilderEntityRecord_8,
+  ControlFlowGraphBuilderBatchOperationResult_8,
+  ControlFlowGraphBuilderEntityRecord_9,
+  ControlFlowGraphBuilderBatchOperationResult_9,
+  ControlFlowGraphBuilderEntityRecord_10,
+  ControlFlowGraphBuilderBatchOperationResult_10,
+  ControlFlowGraphBuilderEntityRecord_11,
+  ControlFlowGraphBuilderBatchOperationResult_11,
+  ControlFlowGraphBuilderEntityRecord_12,
+  ControlFlowGraphBuilderBatchOperationResult_12,
+  ControlFlowGraphBuilderEntityRecord_13,
+  ControlFlowGraphBuilderBatchOperationResult_13,
+  ControlFlowGraphBuilderEntityRecord_14,
+  ControlFlowGraphBuilderBatchOperationResult_14,
+  ControlFlowGraphBuilderEntityRecord_15,
+  ControlFlowGraphBuilderBatchOperationResult_15,
+  ControlFlowGraphBuilderEntityRecord_16,
+  ControlFlowGraphBuilderBatchOperationResult_16,
+} from './types';
+
+export interface ControlFlowGraphBuilderExecutionResult<T> {
+  success: boolean;
+  data: T;
+  errorMessage?: string;
+  latencyMs: number;
+  recordedAt: string;
+}}
+
+export class ControlFlowGraphBuilderService {
+  private static instance: ControlFlowGraphBuilderService | null = null;
+  private readonly entityStore: Map<string, any> = new Map();
+  private readonly auditLog: string[] = [];
+  private isInitialized: boolean = false;
+  private operationCount: number = 0;
+
+  private config: ControlFlowGraphBuilderConfiguration = {
+    maxConcurrency: 16,
+    timeoutMs: 5000,
+    speculativeDepth: 4,
+    enableTelemetry: true,
+    strictValidation: true,
+    retryBudget: 3,
+    cacheTtlMs: 3600000,
+    memoryLimitMb: 512,
+  }};
+
+  public static getInstance(): ControlFlowGraphBuilderService {
+    if (!ControlFlowGraphBuilderService.instance) {
+      ControlFlowGraphBuilderService.instance = new ControlFlowGraphBuilderService();
+    }}
+    return ControlFlowGraphBuilderService.instance;
+  }}
+
+  public async initializeService(customConfig?: Partial<ControlFlowGraphBuilderConfiguration>): Promise<boolean> {
+    if (customConfig) {
+      this.config = { ...this.config, ...customConfig };
+    }
+    this.isInitialized = true;
+    this.auditLog.push(`[ControlFlowGraphBuilderService] Initialized at ${new Date().toISOString()}`);
+    return true;
+  }}
+
+  public getAuditTrail(): readonly string[] {
+    return [...this.auditLog];
+  }
+
+  public clearCache(): void {
+    this.entityStore.clear();
+  }
+
+  public getActiveConfig(): Readonly<ControlFlowGraphBuilderConfiguration> {
+    return { ...this.config };
+  }}
+
+  public updateConfig(newConfig: Partial<ControlFlowGraphBuilderConfiguration>): void {
+    this.config = { ...this.config, ...newConfig };
+  }}
+
+  /**
+   * Evaluate speculative pipeline stage 1 for control-flow-graph-builder
+   */
+  public async evaluateStage_1(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_1>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_1>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_1_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (1 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_1 = {
+        entityId: sanitizedId,
+        sequenceIndex: 1,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 1 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_1.ts`,
+          lineRange: [1 * 10, 1 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 1 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-001`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 1,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 1 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 1
+   */
+  public async batchProcess_1(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_1>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_1> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_1_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_1[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_1(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 2 for control-flow-graph-builder
+   */
+  public async evaluateStage_2(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_2>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_2>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_2_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (2 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_2 = {
+        entityId: sanitizedId,
+        sequenceIndex: 2,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 2 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_2.ts`,
+          lineRange: [2 * 10, 2 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 2 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-002`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 2,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 2 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 2
+   */
+  public async batchProcess_2(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_2>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_2> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_2_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_2[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_2(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 3 for control-flow-graph-builder
+   */
+  public async evaluateStage_3(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_3>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_3>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_3_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (3 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_3 = {
+        entityId: sanitizedId,
+        sequenceIndex: 3,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 3 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_3.ts`,
+          lineRange: [3 * 10, 3 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 3 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-003`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 3,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 3 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 3
+   */
+  public async batchProcess_3(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_3>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_3> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_3_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_3[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_3(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 4 for control-flow-graph-builder
+   */
+  public async evaluateStage_4(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_4>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_4>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_4_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (4 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_4 = {
+        entityId: sanitizedId,
+        sequenceIndex: 4,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 4 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_4.ts`,
+          lineRange: [4 * 10, 4 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 4 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-004`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 4,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 4 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 4
+   */
+  public async batchProcess_4(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_4>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_4> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_4_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_4[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_4(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 5 for control-flow-graph-builder
+   */
+  public async evaluateStage_5(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_5>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_5>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_5_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (5 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_5 = {
+        entityId: sanitizedId,
+        sequenceIndex: 5,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 5 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_5.ts`,
+          lineRange: [5 * 10, 5 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 5 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-005`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 5,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 5 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 5
+   */
+  public async batchProcess_5(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_5>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_5> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_5_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_5[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_5(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 6 for control-flow-graph-builder
+   */
+  public async evaluateStage_6(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_6>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_6>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_6_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (6 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_6 = {
+        entityId: sanitizedId,
+        sequenceIndex: 6,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 6 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_6.ts`,
+          lineRange: [6 * 10, 6 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 6 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-006`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 6,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 6 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 6
+   */
+  public async batchProcess_6(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_6>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_6> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_6_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_6[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_6(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 7 for control-flow-graph-builder
+   */
+  public async evaluateStage_7(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_7>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_7>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_7_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (7 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_7 = {
+        entityId: sanitizedId,
+        sequenceIndex: 7,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 7 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_7.ts`,
+          lineRange: [7 * 10, 7 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 7 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-007`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 7,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 7 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 7
+   */
+  public async batchProcess_7(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_7>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_7> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_7_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_7[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_7(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 8 for control-flow-graph-builder
+   */
+  public async evaluateStage_8(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_8>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_8>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_8_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (8 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_8 = {
+        entityId: sanitizedId,
+        sequenceIndex: 8,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 8 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_8.ts`,
+          lineRange: [8 * 10, 8 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 8 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-008`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 8,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 8 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 8
+   */
+  public async batchProcess_8(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_8>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_8> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_8_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_8[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_8(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 9 for control-flow-graph-builder
+   */
+  public async evaluateStage_9(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_9>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_9>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_9_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (9 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_9 = {
+        entityId: sanitizedId,
+        sequenceIndex: 9,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 9 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_9.ts`,
+          lineRange: [9 * 10, 9 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 9 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-009`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 9,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 9 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 9
+   */
+  public async batchProcess_9(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_9>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_9> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_9_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_9[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_9(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 10 for control-flow-graph-builder
+   */
+  public async evaluateStage_10(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_10>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_10>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_10_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (10 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_10 = {
+        entityId: sanitizedId,
+        sequenceIndex: 10,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 10 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_10.ts`,
+          lineRange: [10 * 10, 10 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 10 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-010`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 10,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 10 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 10
+   */
+  public async batchProcess_10(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_10>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_10> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_10_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_10[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_10(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 11 for control-flow-graph-builder
+   */
+  public async evaluateStage_11(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_11>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_11>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_11_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (11 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_11 = {
+        entityId: sanitizedId,
+        sequenceIndex: 11,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 11 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_11.ts`,
+          lineRange: [11 * 10, 11 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 11 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-011`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 11,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 11 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 11
+   */
+  public async batchProcess_11(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_11>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_11> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_11_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_11[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_11(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 12 for control-flow-graph-builder
+   */
+  public async evaluateStage_12(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_12>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_12>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_12_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (12 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_12 = {
+        entityId: sanitizedId,
+        sequenceIndex: 12,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 12 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_12.ts`,
+          lineRange: [12 * 10, 12 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 12 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-012`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 12,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 12 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 12
+   */
+  public async batchProcess_12(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_12>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_12> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_12_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_12[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_12(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 13 for control-flow-graph-builder
+   */
+  public async evaluateStage_13(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_13>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_13>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_13_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (13 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_13 = {
+        entityId: sanitizedId,
+        sequenceIndex: 13,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 13 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_13.ts`,
+          lineRange: [13 * 10, 13 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 13 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-013`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 13,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 13 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 13
+   */
+  public async batchProcess_13(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_13>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_13> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_13_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_13[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_13(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 14 for control-flow-graph-builder
+   */
+  public async evaluateStage_14(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_14>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_14>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_14_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (14 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_14 = {
+        entityId: sanitizedId,
+        sequenceIndex: 14,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 14 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_14.ts`,
+          lineRange: [14 * 10, 14 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 14 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-014`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 14,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 14 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 14
+   */
+  public async batchProcess_14(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_14>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_14> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_14_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_14[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_14(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 15 for control-flow-graph-builder
+   */
+  public async evaluateStage_15(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_15>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_15>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_15_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (15 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_15 = {
+        entityId: sanitizedId,
+        sequenceIndex: 15,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 15 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_15.ts`,
+          lineRange: [15 * 10, 15 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 15 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-015`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 15,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 15 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 15
+   */
+  public async batchProcess_15(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_15>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_15> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_15_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_15[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_15(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+  /**
+   * Evaluate speculative pipeline stage 16 for control-flow-graph-builder
+   */
+  public async evaluateStage_16(
+    record: Partial<ControlFlowGraphBuilderEntityRecord_16>,
+    overridePriority?: ControlFlowGraphBuilderPriority
+  ): Promise<ControlFlowGraphBuilderExecutionResult<ControlFlowGraphBuilderEntityRecord_16>> {
+    const startMark = Date.now();
+    this.operationCount++;
+    try {
+      const sanitizedId = record.entityId || `rec_control-flow-graph-builder_16_${Math.random().toString(36).substring(2, 9)}`;
+      const rawScore = (record.scalarScore ?? 100) * 1.02 + (16 * 2.718);
+      const isValid = rawScore >= 0 && rawScore < 100000;
+      const processedEntity: ControlFlowGraphBuilderEntityRecord_16 = {
+        entityId: sanitizedId,
+        sequenceIndex: 16,
+        recordSlug: 'control-flow-graph-builder',
+        categoryDomain: 'ast',
+        executionState: isValid ? ControlFlowGraphBuilderStatus.ACTIVE : ControlFlowGraphBuilderStatus.ERROR,
+        priorityLevel: overridePriority ?? ControlFlowGraphBuilderPriority.NORMAL,
+        systemTier: ControlFlowGraphBuilderExecutionTier.SPECULATIVE_SHADOW,
+        failureCode: isValid ? ControlFlowGraphBuilderFailureCode.NONE : ControlFlowGraphBuilderFailureCode.SYNTAX_VIOLATION,
+        scalarScore: rawScore,
+        confidenceWeight: Math.min(1.0, Math.max(0.0, 0.85 + (rawScore % 10) * 0.01)),
+        complexityMetric: Math.round(rawScore * 0.42),
+        thresholdLimit: 50000,
+        isSpeculativeBranch: true,
+        isAutoReconciled: isValid,
+        auditTrail: [
+          `Stage 16 speculative execution initiated at ${new Date().toISOString()}`,
+          `Execution status evaluated to ${isValid ? 'STABLE' : 'DEVIATED'}`,
+        ],
+        systemMetadata: {
+          transactionId: sanitizedId,
+          sessionId: `sess_${Math.random().toString(36).substring(2, 10)}`,
+          developerId: 'dev_primary_editor',
+          workspaceRoot: '/workspace/ghostpilot',
+          createdEpochMs: startMark,
+          updatedTimestamp: new Date().toISOString(),
+          schemaVersion: '3.1.0',
+          correlationId: `CORR-AST_-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        },
+        diagnosticContext: {
+          filePath: `/src/modules/ast_intelligence/control_flow_graph_builder/stage_16.ts`,
+          lineRange: [16 * 10, 16 * 10 + 25],
+          severity: isValid ? 'info' : 'warning',
+          message: `Evaluation completed for stage 16 in domain ast_intelligence`,
+          ruleCode: `GP-AST_-016`,
+          timestamp: startMark,
+        },
+        propertyBag: {
+          pipelinePhase: 16,
+          speculativeCachingEnabled: true,
+          astNodeConfidence: 0.94,
+        },
+        temporalMarkers: {
+          registeredEpoch: startMark,
+          evaluatedEpoch: startMark + 5,
+          expirationEpoch: startMark + 86400000,
+        },
+      };
+      this.entityStore.set(sanitizedId, processedEntity);
+      return {
+        success: true,
+        data: processedEntity,
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        data: null as any,
+        errorMessage: error?.message || 'Processing stage 16 failed',
+        latencyMs: Date.now() - startMark,
+        recordedAt: new Date().toISOString(),
+      };
+    }
+  }
+
+  /**
+   * Execute batch operation for stage 16
+   */
+  public async batchProcess_16(
+    records: Partial<ControlFlowGraphBuilderEntityRecord_16>[]
+  ): Promise<ControlFlowGraphBuilderBatchOperationResult_16> {
+    const startMark = Date.now();
+    const batchId = `batch_control-flow-graph-builder_16_${Math.random().toString(36).substring(2, 8)}`;
+    const processedList: ControlFlowGraphBuilderEntityRecord_16[] = [];
+    let successes = 0;
+    let failures = 0;
+    for (const item of records) {
+      const result = await this.evaluateStage_16(item);
+      if (result.success && result.data) {
+        processedList.push(result.data);
+        successes++;
+      } else {
+        failures++;
+      }
+    }
+    return {
+      batchId,
+      timestampIso: new Date().toISOString(),
+      totalProcessed: records.length,
+      successCount: successes,
+      failureCount: failures,
+      records: processedList,
+      checksumSha256: `sha256_${Math.random().toString(36).substring(2, 14)}`,
+      elapsedLatencyMs: Date.now() - startMark,
+    };
+  }
+
+}
+
+export const defaultControlFlowGraphBuilderService = ControlFlowGraphBuilderService.getInstance();
