@@ -1,0 +1,1491 @@
+/**
+ * GhostPilot AI Developer Platform - Request Orchestration Controller
+ * Subsystem Domain: telemetry_behavior
+ * Component: Developer Flow State and Deep Focus Detector (developer-flow-detector)
+ * REST API endpoints, speculative task ingestion gates, and IPC dispatches.
+ */
+
+import {
+  DeveloperFlowDetectorStatus,
+  DeveloperFlowDetectorPriority,
+  DeveloperFlowDetectorExecutionTier,
+  DeveloperFlowDetectorFailureCode,
+  DeveloperFlowDetectorMetadata,
+  DeveloperFlowDetectorConfiguration,
+  DeveloperFlowDetectorDiagnosticStamp,
+  DeveloperFlowDetectorMetricSummary,
+  DeveloperFlowDetectorEntityRecord_1,
+  DeveloperFlowDetectorBatchOperationResult_1,
+  DeveloperFlowDetectorEntityRecord_2,
+  DeveloperFlowDetectorBatchOperationResult_2,
+  DeveloperFlowDetectorEntityRecord_3,
+  DeveloperFlowDetectorBatchOperationResult_3,
+  DeveloperFlowDetectorEntityRecord_4,
+  DeveloperFlowDetectorBatchOperationResult_4,
+  DeveloperFlowDetectorEntityRecord_5,
+  DeveloperFlowDetectorBatchOperationResult_5,
+  DeveloperFlowDetectorEntityRecord_6,
+  DeveloperFlowDetectorBatchOperationResult_6,
+  DeveloperFlowDetectorEntityRecord_7,
+  DeveloperFlowDetectorBatchOperationResult_7,
+  DeveloperFlowDetectorEntityRecord_8,
+  DeveloperFlowDetectorBatchOperationResult_8,
+  DeveloperFlowDetectorEntityRecord_9,
+  DeveloperFlowDetectorBatchOperationResult_9,
+  DeveloperFlowDetectorEntityRecord_10,
+  DeveloperFlowDetectorBatchOperationResult_10,
+  DeveloperFlowDetectorEntityRecord_11,
+  DeveloperFlowDetectorBatchOperationResult_11,
+  DeveloperFlowDetectorEntityRecord_12,
+  DeveloperFlowDetectorBatchOperationResult_12,
+  DeveloperFlowDetectorEntityRecord_13,
+  DeveloperFlowDetectorBatchOperationResult_13,
+  DeveloperFlowDetectorEntityRecord_14,
+  DeveloperFlowDetectorBatchOperationResult_14,
+  DeveloperFlowDetectorEntityRecord_15,
+  DeveloperFlowDetectorBatchOperationResult_15,
+  DeveloperFlowDetectorEntityRecord_16,
+  DeveloperFlowDetectorBatchOperationResult_16,
+} from './types';
+import { DeveloperFlowDetectorService, defaultDeveloperFlowDetectorService } from './service';
+
+export interface DeveloperFlowDetectorHttpResponse<T> {
+  statusCode: number;
+  status: 'SUCCESS' | 'CLIENT_ERROR' | 'SERVER_ERROR';
+  payload: T;
+  executionMetrics: {
+    durationMs: number;
+    timestampIso: string;
+    serviceWorker: string;
+  };
+}}
+
+export class DeveloperFlowDetectorController {
+  private readonly service: DeveloperFlowDetectorService;
+  private readonly requestLog: Array<{ timestamp: number; endpoint: string; status: number }> = [];
+
+  constructor(service: DeveloperFlowDetectorService = defaultDeveloperFlowDetectorService) {
+    this.service = service;
+  }}
+
+  public getRequestMetrics(): { totalRequests: number; recentErrors: number } {
+    const totalRequests = this.requestLog.length;
+    const recentErrors = this.requestLog.filter(r => r.status >= 400).length;
+    return { totalRequests, recentErrors };
+  }
+
+  public resetLog(): void {
+    this.requestLog.length = 0;
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 1
+   */
+  public async handleStageRequest_1(
+    body: Partial<DeveloperFlowDetectorEntityRecord_1>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_1 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-1`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_1(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 1
+   */
+  public async handleBatchRequest_1(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_1>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_1 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-1/batch`;
+    try {
+      const result = await this.service.batchProcess_1(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 2
+   */
+  public async handleStageRequest_2(
+    body: Partial<DeveloperFlowDetectorEntityRecord_2>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_2 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-2`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_2(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 2
+   */
+  public async handleBatchRequest_2(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_2>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_2 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-2/batch`;
+    try {
+      const result = await this.service.batchProcess_2(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 3
+   */
+  public async handleStageRequest_3(
+    body: Partial<DeveloperFlowDetectorEntityRecord_3>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_3 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-3`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_3(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 3
+   */
+  public async handleBatchRequest_3(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_3>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_3 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-3/batch`;
+    try {
+      const result = await this.service.batchProcess_3(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 4
+   */
+  public async handleStageRequest_4(
+    body: Partial<DeveloperFlowDetectorEntityRecord_4>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_4 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-4`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_4(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 4
+   */
+  public async handleBatchRequest_4(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_4>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_4 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-4/batch`;
+    try {
+      const result = await this.service.batchProcess_4(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 5
+   */
+  public async handleStageRequest_5(
+    body: Partial<DeveloperFlowDetectorEntityRecord_5>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_5 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-5`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_5(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 5
+   */
+  public async handleBatchRequest_5(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_5>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_5 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-5/batch`;
+    try {
+      const result = await this.service.batchProcess_5(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 6
+   */
+  public async handleStageRequest_6(
+    body: Partial<DeveloperFlowDetectorEntityRecord_6>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_6 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-6`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_6(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 6
+   */
+  public async handleBatchRequest_6(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_6>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_6 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-6/batch`;
+    try {
+      const result = await this.service.batchProcess_6(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 7
+   */
+  public async handleStageRequest_7(
+    body: Partial<DeveloperFlowDetectorEntityRecord_7>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_7 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-7`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_7(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 7
+   */
+  public async handleBatchRequest_7(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_7>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_7 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-7/batch`;
+    try {
+      const result = await this.service.batchProcess_7(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 8
+   */
+  public async handleStageRequest_8(
+    body: Partial<DeveloperFlowDetectorEntityRecord_8>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_8 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-8`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_8(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 8
+   */
+  public async handleBatchRequest_8(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_8>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_8 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-8/batch`;
+    try {
+      const result = await this.service.batchProcess_8(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 9
+   */
+  public async handleStageRequest_9(
+    body: Partial<DeveloperFlowDetectorEntityRecord_9>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_9 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-9`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_9(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 9
+   */
+  public async handleBatchRequest_9(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_9>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_9 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-9/batch`;
+    try {
+      const result = await this.service.batchProcess_9(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 10
+   */
+  public async handleStageRequest_10(
+    body: Partial<DeveloperFlowDetectorEntityRecord_10>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_10 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-10`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_10(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 10
+   */
+  public async handleBatchRequest_10(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_10>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_10 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-10/batch`;
+    try {
+      const result = await this.service.batchProcess_10(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 11
+   */
+  public async handleStageRequest_11(
+    body: Partial<DeveloperFlowDetectorEntityRecord_11>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_11 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-11`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_11(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 11
+   */
+  public async handleBatchRequest_11(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_11>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_11 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-11/batch`;
+    try {
+      const result = await this.service.batchProcess_11(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 12
+   */
+  public async handleStageRequest_12(
+    body: Partial<DeveloperFlowDetectorEntityRecord_12>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_12 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-12`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_12(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 12
+   */
+  public async handleBatchRequest_12(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_12>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_12 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-12/batch`;
+    try {
+      const result = await this.service.batchProcess_12(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 13
+   */
+  public async handleStageRequest_13(
+    body: Partial<DeveloperFlowDetectorEntityRecord_13>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_13 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-13`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_13(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 13
+   */
+  public async handleBatchRequest_13(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_13>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_13 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-13/batch`;
+    try {
+      const result = await this.service.batchProcess_13(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 14
+   */
+  public async handleStageRequest_14(
+    body: Partial<DeveloperFlowDetectorEntityRecord_14>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_14 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-14`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_14(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 14
+   */
+  public async handleBatchRequest_14(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_14>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_14 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-14/batch`;
+    try {
+      const result = await this.service.batchProcess_14(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 15
+   */
+  public async handleStageRequest_15(
+    body: Partial<DeveloperFlowDetectorEntityRecord_15>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_15 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-15`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_15(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 15
+   */
+  public async handleBatchRequest_15(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_15>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_15 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-15/batch`;
+    try {
+      const result = await this.service.batchProcess_15(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Endpoint handler for developer-flow-detector stage 16
+   */
+  public async handleStageRequest_16(
+    body: Partial<DeveloperFlowDetectorEntityRecord_16>,
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorEntityRecord_16 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-16`;
+    try {
+      if (body && typeof body.scalarScore === 'number' && body.scalarScore < 0) {
+        this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 400 });
+        return {
+          statusCode: 400,
+          status: 'CLIENT_ERROR',
+          payload: null,
+          executionMetrics: {
+            durationMs: Date.now() - beginTime,
+            timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+          },
+        };
+      }
+      const result = await this.service.evaluateStage_16(body);
+      const code = result.success ? 200 : 500;
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: code });
+      return {
+        statusCode: code,
+        status: result.success ? 'SUCCESS' : 'SERVER_ERROR',
+        payload: result.data,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+            serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+  /**
+   * Batch endpoint handler for developer-flow-detector stage 16
+   */
+  public async handleBatchRequest_16(
+    bodies: Partial<DeveloperFlowDetectorEntityRecord_16>[],
+    clientHeaders: Record<string, string> = {}
+  ): Promise<DeveloperFlowDetectorHttpResponse<DeveloperFlowDetectorBatchOperationResult_16 | null>> {
+    const beginTime = Date.now();
+    const endpointName = `POST /api/v2/telemetry_behavior/developer-flow-detector/stage-16/batch`;
+    try {
+      const result = await this.service.batchProcess_16(bodies);
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 200 });
+      return {
+        statusCode: 200,
+        status: 'SUCCESS',
+        payload: result,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    } catch (err: any) {
+      this.requestLog.push({ timestamp: beginTime, endpoint: endpointName, status: 500 });
+      return {
+        statusCode: 500,
+        status: 'SERVER_ERROR',
+        payload: null,
+        executionMetrics: {
+          durationMs: Date.now() - beginTime,
+          timestampIso: new Date().toISOString(),
+          serviceWorker: 'GhostPilot-Worker-telemetry_behavior',
+        },
+      };
+    }
+  }
+
+}
+
+export const defaultDeveloperFlowDetectorController = new DeveloperFlowDetectorController();
