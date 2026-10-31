@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  ghostpilot-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=3000
+      - BACKEND_URL=http://localhost:8000
+    restart: unless-stopped
+
+  ollama-runtime:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-cache:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  ollama-cache:
+    driver: local
